@@ -37,7 +37,7 @@ onmessage = function(event) {
 			postMessage(result);
 	}
 }
-
+var parser = function(action, params) {
 	this.initialized = false;
 	if (typeof action !== 'undefined') {
 		return this[action].call(this, params);
@@ -186,6 +186,16 @@ function zeroFill(number, size) {
 	  while (number.length < size) number = "0" + number;
 	  return number;
 	}
+
+
+
+
+
+
+
+
+
+
 
 parser.init = function(videoBlob) {
 	var self = this;
@@ -1605,7 +1615,4 @@ parser.getMP4Brand = function(buffer, brandPos, length) {
 		this.fileStructure.fileDesc['MP4brand'] += stringFromUint32(view)
 	}
 	this.fileStructure.brandBuffer = buffer.slice(brandPos, brandPos + length);
-}
-var parser = function(action, params) {
-
 }
