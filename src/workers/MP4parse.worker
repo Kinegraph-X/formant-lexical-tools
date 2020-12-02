@@ -929,6 +929,7 @@ parser.parse_esds_atom = function(size) {
 	blockContent['stream_dependance_flag'] = blockContent['tags'] & 0x80;
 	blockContent['url_flag'] = blockContent['tags'] & 0x40;
 	blockContent['stream_priority'] = (blockContent['tags'] << 3) >>> 3;
+	delete blockContent['tags'];
 	this.pos += 1;
 	
 	// ISO_IEC_14496-1_1998 p24 (pdf p47)
@@ -1559,14 +1560,16 @@ parser.parse_hdlr_atom = function(size) {
 
 parser.parse_elst_atom = function(size) {
 	var originalPos = Number(this.pos);
+	var numberOfEntries = this.headerBuffer.getUint32(this.pos + 4);
 	var blockContent = {
 			'version' : this.headerBuffer.getUint8(this.pos++),
-			'flags' : this.headerBuffer.getUint8(this.pos++).toString() + this.headerBuffer.getUint8(this.pos++).toString() + this.headerBuffer.getUint8(this.pos++).toString()
+			'flags' : this.headerBuffer.getUint8(this.pos++).toString() + this.headerBuffer.getUint8(this.pos++).toString() + this.headerBuffer.getUint8(this.pos++).toString(),
+			numberOfEntries : this.headerBuffer.getUint32(this.pos),
+			elstTable : this.parse_st_table(numberOfEntries, MP4.sampleTables.entrySize['elst'])
 	};
-	var numberOfEntries = this.headerBuffer.getUint32(this.pos);
 	
 	this.pos = originalPos + size - 8;
-	return {numberOfEntries : numberOfEntries, elstTable : this.parse_st_table(numberOfEntries, MP4.sampleTables.entrySize['elst']), content : blockContent};
+	return {'size' : size, content : blockContent};
 }
 
 parser.trackTypeFromSubType = function(subType) {
