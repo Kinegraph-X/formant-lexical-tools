@@ -1105,11 +1105,13 @@ function consumeAFunction(s) {
 function normalizeInput(input) {
 	if(typeof input == "string")
 		return new TokenStream(tokenize(input));
+	else if(typeof input == "number")
+		return new TokenStream(tokenize(input.toString()));
 	if(input instanceof TokenStream)
 		return input;
 	if(input.length !== undefined)
 		return new TokenStream(input);
-	else throw SyntaxError(input);
+	else throw SyntaxError(String(input) + ' ' + typeof input);
 }
 
 function parseAStylesheet(s) {
