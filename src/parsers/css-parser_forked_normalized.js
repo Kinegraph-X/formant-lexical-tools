@@ -816,6 +816,7 @@ function PercentageToken() {
 	CSSParserToken.call(this);
 	this.value = 0;
 	this.repr = "";
+	this.type = "percentage";
 }
 PercentageToken.prototype = Object.create(CSSParserToken.prototype);
 PercentageToken.prototype.tokenType = "PERCENTAGE";
